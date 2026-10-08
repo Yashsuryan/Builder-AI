@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CloudUploadIcon, Loader2Icon, MicIcon } from 'lucide-react'
+import { ArrowRightIcon, CloudUploadIcon, Loader2Icon, MicIcon, } from 'lucide-react'
 import React, { useEffect, useState, useRef } from 'react'
 
 const PromptInput = ({onSubmit, loading = false, placeholder = "Describe the website you want to build...", large = false, autoFocus = false, variant = "default"}) => {
@@ -64,7 +64,7 @@ const PromptInput = ({onSubmit, loading = false, placeholder = "Describe the web
         />
 
         <button onClick={()=> handleKeyDown()} disabled={!value.trim() || loading} className='inline-flex items-center justify-center bg-zinc-950 text-white hover:bg-zinc-800 disabled:opacity-40 cursor-pointer rounded-dull shrink-0' style={{width: large ? 36 : 24, height: large ? 36 : 24}}>
-            {loading ? <Loading2Icon size={large ? 20 : 15} className="animate-spin"/> : <ArrowRightIcon size={large ? 20 : 15} />} 
+            {loading ? <Loader2Icon size={large ? 20 : 15} className="animate-spin"/> : <ArrowRightIcon size={large ? 20 : 15} />} 
         </button>
     </div>
   )

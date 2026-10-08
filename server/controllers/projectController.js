@@ -87,18 +87,18 @@ async function runBackgroundGeneration(projectId, prompt) {
                     currentFile: path,
                 })
             },
-            onFileComplete: async (path)=>{
-                console.log(`[Background AI] Finished FIle ${path} for project ${projectId}`);
+            onFileComplete: async (path, code)=>{
+                console.log(`[Background AI] Finished file ${path} for project ${projectId}`);
 
                 const project = await Project.findById(projectId);
 
                 if(project) {
                     project.files = project.files || {};
                     project.files[path] = {content: code, hash: hashContent(code)};
-                    project.filesGenerated = [...Project(project.filesGenerated || []), path];
+                    project.filesGenerated = [...(project.filesGenerated || []), path];
                     project.messages.push({
                         role: "assistant",
-                        content: `Created file "S{path}"`,
+                        content: `Created file "${path}"`,
                         timestamp: new Date(),
                     });
                     project.currentFile = null;
@@ -110,12 +110,12 @@ async function runBackgroundGeneration(projectId, prompt) {
 
         console.log(`[Background AI] Successfully generated project ${projectId}`);
 
-        const project = await Project.findById(project);
+        const project = await Project.findById(projectId);
         if(project){
             project.status = "completed";
             project.version = 1;
             if(result.description){
-                project.name = result.description;
+                project.description = result.description;
             }
             project.messages.push({
                 role: "assistant",
@@ -205,6 +205,7 @@ export async function deleteProject(req, res) {
     const result = await Project.findOneAndDelete({_id: req.params.id, owner: req.user.userId})
     if(!result){
         res.status(404).json({error: "Project not found"});
+        return
     }
     res.json({success: true})
 }
@@ -232,7 +233,7 @@ export async function updateProjectFiles(req, res){
     // Rebuild project files map with content & hashes
     const newFiles = {};
     for (const [path, content] of Object.entries(files)) {
-        if(typeof content === "String"){
+        if(typeof content === "string"){
             newFiles[path] = {content, hash: hashContent(content)}
         }
     }
@@ -242,9 +243,7 @@ export async function updateProjectFiles(req, res){
 
     const filesObj = {};
     for(cont [path, entry] of Object.entries(project.files)) {
-        if(typeof content === "string") {
-            filesObj[path] = entry.content;
-        }
+        filesObj[path] = entry.content;
     }
 
     res.json({
