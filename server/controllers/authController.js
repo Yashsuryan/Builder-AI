@@ -82,11 +82,11 @@ export async function logout(req, res) {
     res.cookie("token", "", {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        samesite: 'lax',
+        sameSite: 'lax',
         maxAge: 0,
         path: "/",
     })
-    res.json({success: ture})
+    res.json({success: true})
 }
 
 export async function me(req, res) {
